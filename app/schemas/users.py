@@ -18,3 +18,22 @@ class Friends(BaseModel):
     last_comment_date: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class IdBadgeHistory(BaseModel):
+    """"
+    Schema representing the badge history for a user, including the badge earned,
+    the associated post made before earning the badge, and details of that post.
+
+    Attributes:
+        badge_name (str): The name of the badge.
+        post_id (int): The unique identifier of the post made before earning the badge.
+        post_date (datetime): The date and time when the post was created.
+        post_body (str): The content of the post made before earning the badge.
+    """
+    badge_name: str
+    post_id: int
+    post_date: datetime
+    post_body: str
+
+    model_config = ConfigDict(from_attributes=True)

@@ -17,7 +17,7 @@ router = APIRouter(
 logger = logging.getLogger("app.api.tags_stats")
 
 @router.get("/tags/{tag_name}/stats", response_model=List[Stats])
-def get_tag_stats(tag_name: str = Path(..., description="The name of the tag")):
+def get_tags_stats(tag_name: str = Path(..., description="The name of the tag")):
     """
     Retrieve the percentage of posts with a particular tag for each day of the week.
 

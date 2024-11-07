@@ -3,7 +3,9 @@ import logging
 
 # Import routers
 from app.api import (
-    posts_users, users_friends, tags_stats
+    posts_users, users_friends, tags_stats,
+    posts_duration_limit, posts_limit_query,
+    users_id_badge_hist
 )
 
 
@@ -24,6 +26,9 @@ app = FastAPI(
 app.include_router(posts_users.router)
 app.include_router(users_friends.router)
 app.include_router(tags_stats.router)
+app.include_router(posts_duration_limit.router)
+app.include_router(posts_limit_query.router)
+app.include_router(users_id_badge_hist.router)
 
 # Root endpoint for basic health check
 @app.get("/", tags=["Health"])

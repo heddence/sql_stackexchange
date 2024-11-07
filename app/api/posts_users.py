@@ -18,7 +18,7 @@ logger = logging.getLogger("app.api.posts_users")
 
 
 @router.get("/posts/{post_id}/users", response_model=List[Users])
-def get_discussants(post_id: int = Path(..., ge=1, description="The ID of the post")):
+def get_posts_users(post_id: int = Path(..., ge=1, description="The ID of the post")):
     """
     Retrieve a list of all discussants (users who have commented) on a specific post.
 

@@ -1,11 +1,11 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Path, Query
 from typing import List
 import psycopg2.extras
 import logging
 
 from app.db.session import get_db_connection, release_db_connection
-from app.schemas.posts import LimitQuery
-from app.services.posts_limit_query import get_posts_limit_query_service
+from app.schemas.posts import IdLimit
+from app.services.posts_id_limit import get_posts_id_limit_service
 
 
 router = APIRouter(
@@ -17,34 +17,36 @@ router = APIRouter(
 logger = logging.getLogger("app.api.posts")
 
 
-@router.get("/posts/q2/", response_model=List[LimitQuery])
+@router.get("/posts/{post_id}", response_model=List[IdLimit])
 def get_posts(
-        limit: int = Query(10, ge=1, le=100, description="Number of posts to return"),
-        query: str = Query("", description="Search query for filtering posts by title or body")
+        post_id: int = Path(..., description="Starting thread post id"),
+        limit: int = Query(1, ge=1, le=100, description="Number of posts to return"),
 ):
     """
-    Retrieve a list of posts ordered from newest to oldest, including associated tags.
+    Retrieve a post within a thread, starting from a specific post and including all its descendant posts.
+
+    The details of each post in the thread, including its hierarchical level for reconstructing the thread structure.
 
     Args:
-        limit (int): Number of posts to return (1-100).
-        query (str): Search query to filter posts by title or body.
+        post_id (int): The post id starting the thread.
+        limit (int): Maximum number of posts to return.
 
     Returns:
-        List[PostWithTags]: A list of posts with associated tags matching the criteria.
+        List[IdLimit]: A thread of posts.
 
     Raises:
         HTTPException:
-            - 404: If no posts match the criteria.
+            - 404: If no thread exists.
             - 500: If an internal server error occurs.
     """
-    logger.info(f"Fetching {limit} most recent posts with query '{query}'")
+    logger.info(f"Fetching post with {post_id}")
     connection = get_db_connection()
     try:
         # Fetch posts with tags using the service function
-        posts = get_posts_limit_query_service(connection, query, limit)
+        posts = get_posts_id_limit_service(connection, post_id, limit)
         if not posts:
-            logger.warning(f"No posts found matching query '{query}' with limit {limit}")
-            raise HTTPException(status_code=404, detail="No posts found matching the criteria.")
+            logger.warning(f"No thread found matching starting post id '{post_id}'.")
+            raise HTTPException(status_code=404, detail="No thread found.")
         logger.info(f"Retrieved {len(posts)} posts")
         return posts
 

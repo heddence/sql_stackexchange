@@ -5,7 +5,8 @@ import logging
 from app.api import (
     posts_users, users_friends, tags_stats,
     posts_duration_limit, posts_limit_query,
-    users_id_badge_hist
+    users_id_badge_hist, tags_comments_count,
+    tags_comments_pos_lim, posts_id_limit
 )
 
 
@@ -29,6 +30,9 @@ app.include_router(tags_stats.router)
 app.include_router(posts_duration_limit.router)
 app.include_router(posts_limit_query.router)
 app.include_router(users_id_badge_hist.router)
+app.include_router(tags_comments_count.router)
+app.include_router(tags_comments_pos_lim.router)
+app.include_router(posts_id_limit.router)
 
 # Root endpoint for basic health check
 @app.get("/", tags=["Health"])

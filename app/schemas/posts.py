@@ -1,6 +1,5 @@
 from datetime import datetime
-from typing import List
-
+from typing import List, Optional
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -58,5 +57,24 @@ class LimitQuery(BaseModel):
     creationdate: datetime
     body: str
     tags: List[str] = Field(default_factory=list, description="Associated tags")
+
+    model_config = ConfigDict(from_attributes=True)
+
+class IdLimit(BaseModel):
+    """
+    Schema representing a post within a thread, starting from a specific post and including all its descendant posts.
+
+    Attributes:
+        id (int): The unique identifier of the post.
+        parent_id (Optional[int]): The identifier of the parent post, if any.
+        creationdate (datetime): The date and time when the post was created.
+        body (str): The content of the post.
+        level (int): The hierarchical level of the post within the thread (1 for the root post).
+    """
+    id: int
+    parentid: Optional[int]
+    creationdate: datetime
+    body: str
+    level: int
 
     model_config = ConfigDict(from_attributes=True)

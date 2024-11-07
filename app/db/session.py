@@ -17,6 +17,7 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
 # Verify that all required environment variables are set
 missing_vars = []

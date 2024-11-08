@@ -11,7 +11,7 @@ services:
       - db_data:/var/lib/postgresql/data
       - ./data/:/data
     ports:
-      - "5433:5432"
+      - "${DB_PORT}:${DB_PORT}"
 
   app:
     build:
